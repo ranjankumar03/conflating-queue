@@ -54,6 +54,11 @@ public class ConflatingQueueImpl<K, V> implements ConflatingQueue<K, V> {
         }
     }
 
+    /**
+     * Removes the first key value item in the queue, blocking if the queue is empty.
+     * @return
+     * @throws InterruptedException
+     */
     @Override
     public KeyValue<K, V> take() throws InterruptedException {
         // Wait for an item to be available, ie blocking behavior
