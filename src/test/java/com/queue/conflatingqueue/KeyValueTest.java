@@ -35,6 +35,59 @@ public class KeyValueTest {
         assertEquals("hello", kv.getValue());
     }
 
+    @Test
+    public void testImmutability() {
+        KeyValue<String, String> kv = new SimpleKeyValue<>("immutable", "value");
+        // There are no setters, so values should not change
+        assertEquals("immutable", kv.getKey());
+        assertEquals("value", kv.getValue());
+    }
+
+    @Test
+    public void testSameKeyDifferentValues() {
+        KeyValue<String, Integer> kv1 = new SimpleKeyValue<>("key", 1);
+        KeyValue<String, Integer> kv2 = new SimpleKeyValue<>("key", 2);
+        assertEquals("key", kv1.getKey());
+        assertEquals("key", kv2.getKey());
+        assertNotEquals(kv1.getValue(), kv2.getValue());
+    }
+
+    @Test
+    public void testEmptyStringKeyAndValue() {
+        KeyValue<String, String> kv = new SimpleKeyValue<>("", "");
+        assertEquals("", kv.getKey());
+        assertEquals("", kv.getValue());
+    }
+
+    @Test
+    public void testLargeObjects() {
+        String largeKey = "k".repeat(10000);
+        String largeValue = "v".repeat(10000);
+        KeyValue<String, String> kv = new SimpleKeyValue<>(largeKey, largeValue);
+        assertEquals(largeKey, kv.getKey());
+        assertEquals(largeValue, kv.getValue());
+    }
+
+    @Test
+    public void testKeyValueWithCustomObject() {
+        class Custom {
+            int id;
+            Custom(int id) { this.id = id; }
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                Custom custom = (Custom) o;
+                return id == custom.id;
+            }
+        }
+        Custom key = new Custom(5);
+        Custom value = new Custom(10);
+        KeyValue<Custom, Custom> kv = new SimpleKeyValue<>(key, value);
+        assertEquals(key, kv.getKey());
+        assertEquals(value, kv.getValue());
+    }
+
     // Simple implementation for testing
     private static class SimpleKeyValue<K, V> implements KeyValue<K, V> {
         private final K key;
