@@ -84,11 +84,17 @@ public class KeyValueTest {
         Custom key = new Custom(5);
         Custom value = new Custom(10);
         KeyValue<Custom, Custom> kv = new SimpleKeyValue<>(key, value);
+
+        //then
         assertEquals(key, kv.getKey());
         assertEquals(value, kv.getValue());
     }
 
-    // Simple implementation for testing
+    /**
+     * A simple implementation of the KeyValue interface for testing purposes.
+     * @param <K>
+     * @param <V>
+     */
     private static class SimpleKeyValue<K, V> implements KeyValue<K, V> {
         private final K key;
         private final V value;
